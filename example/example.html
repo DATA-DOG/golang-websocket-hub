@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html class="no-js" ng-app="app">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Websocket Hub Example</title>
+  <meta name="description" content="Websocket Hub Example">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="example.css">
+</head>
+<body ng-controller="AppCtrl">
+<!--[if lt IE 8]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+<div class="container">
+
+  <header class="header clearfix centered" style="margin-top: 30px;">
+    <nav>
+      <ul class="nav pull-right top-menu">
+        <li class="dropdown" uib-dropdown>
+          <a data-toggle="dropdown" class="dropdown-toggle" uib-dropdown-toggle href="#">
+            <span class="username">{{ user.name }}</span>
+            <b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu extended logout" role="menu">
+            <li ng-repeat="(username, usr) in users">
+                <a href="#{{ username }}" ng-click="switch(username)">{{ usr.name }}</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+    <h3 class="text-muted">Websocket Hub Example</h3>
+  </header>
+
+  <section class="row marketing">
+    <div class="col-md-6">
+      <section class="panel">
+        <header class="panel-heading">
+          <h4>Received message for chosen user: {{ user.name }}</h4>
+        </header>
+        <div class="panel-body">
+          <div ng-repeat="msg in user.messages" class="alert alert-{{ groups[msg.topic].bg }}">
+            <div class="row">
+              <div class="col-sm-12">
+                {{ msg.data }}
+                <div class="pull-right">
+                  <button type="button" class="btn btn-sm btn-danger" ng-click="remove(msg)">Remove</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-show="!user.messages.length" class="alert alert-info">No messages yet</li>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-md-6">
+      <section class="panel">
+        <header class="panel-heading">
+          <h4>Send message to selected user or fan out to all users</h4>
+        </header>
+        <div class="panel-body">
+          <form class="form-horizontal" role="form" novalidate="novalidate">
+
+            <div class="form-group">
+              <label class="col-sm-4 control-label" for="topic">Topic</label>
+              <div class="col-sm-8">
+                <select class="form-control" id="topic" ng-model="message.topic" ng-init="message.topic='system'">
+                  <option ng-repeat="(type, group) in groups" value="{{ type }}" class="text-{{ group.bg }}">{{ group.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-4 control-label">Message</label>
+              <div class="col-sm-8">
+                <textarea class="form-control" rows="6" ng-model="message.data"></textarea>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-4 control-label" for="to" >Receiver</label>
+              <div class="col-sm-8">
+                <select class="form-control" ng-model="message.to" id="to">
+                  <option value="">Everyone</option>
+                  <option ng-repeat="(username, usr) in users" value="{{ username }}">{{ usr.name }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-4 col-lg-8">
+                <button type="button" class="btn btn-success" ng-click="send()">Send</button>
+                <button type="button" class="btn btn-danger" ng-click="reset()">Reset</button>
+              </div>
+            </div>
+
+            <pre>submit message = {{message | json}}</pre>
+
+          </form>
+        </div>
+      </section>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.0.3/ui-bootstrap.min.js"></script>
+<script src="https://cdn.rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.min.js"></script>
+<script src="example.js"></script>
+</body>
+</html>

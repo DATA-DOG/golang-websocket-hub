@@ -1,8 +1,8 @@
-package wshub
+package hub
 
 import (
 	"crypto/hmac"
-	"crypto/sha512"
+	"crypto/sha256"
 	"encoding/hex"
 )
 
@@ -16,9 +16,9 @@ func (tf TokenizerFunc) Tokenize(username string) string {
 	return tf(username)
 }
 
-func HmacSha512Tokenizer(secret string) Tokenizer {
+func HmacSha256Tokenizer(secret string) Tokenizer {
 	return TokenizerFunc(func(username string) string {
-		hasher := hmac.New(sha512.New, []byte(secret))
+		hasher := hmac.New(sha256.New, []byte(secret))
 		hasher.Write([]byte(username))
 		return hex.EncodeToString(hasher.Sum(nil))
 	})

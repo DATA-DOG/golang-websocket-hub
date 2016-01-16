@@ -1,11 +1,11 @@
-package wshub
+package hub
 
 import (
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"sync"
 
@@ -56,7 +56,7 @@ func New(logOutput io.Writer, origins ...string) *Hub {
 	h.wsConnFactory = factory
 
 	if nil == logOutput {
-		logOutput = os.Stderr
+		logOutput = ioutil.Discard
 	}
 	h.log = log.New(leveledLogWriter(logOutput), "", log.LstdFlags)
 
@@ -156,6 +156,7 @@ func (h *Hub) doSubscribe(s *subscription) {
 	ns.connections[s.connection] = true
 	h.connections[s.connection] = ns
 	h.subscribers[ns.Username] = ns
+	h.log.Println("[DEBUG] subscribed as:", s.Username)
 }
 
 func (h *Hub) doUnregister(c *connection) {

@@ -1,4 +1,4 @@
-package wshub
+package hub
 
 import "encoding/json"
 
